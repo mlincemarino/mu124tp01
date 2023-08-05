@@ -9,6 +9,198 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Prueba
+## Introducción
 
-rrr
+El presente trabajo pretende servir de ejercicio preparatorio de la tesis, cuyo objeto de estudio es "Mi Pieza", un programa de subsidios destinado al mejoramiento de vivienda por autoconstrucción en barrios populares de Argentina.
+
+La base de datos fue obtenida a partir de un relevamiento que estuvo a cargo del Centro de Investigaciones en Estadística Aplicada (CINEA) de la Universidad Nacional de Tres de Febrero (UNTREF) en el marco de un proyecto financiado por el Banco Interamericano de Desarrollo.
+
+## Pregunta de investigación
+
+Sobre la base de los hallazgos que surgieron de la evaluación de impacto realizada (ampliar info y poner link) y con el objetivo de realizar reformulaciones de la política, se pretende indagar acerca del efecto que tuvo la asignación de montos idénticos para todas las provincias del país. Para ello, se realizará una división del país en regiones.
+
+### Trabajo sobre la base
+
+La base de datos original contiene 3.083 observaciones y más de 190 variables.Debido a la pregunta de investigación, se buscará editar la base conforme la necesidad, de manera de trabajar con menor cantidad de información.
+
+A los fines de poder leer correctamente la base, se eliminaron manualmente las columnas con campos abiertos dado que se importaron con errores en los caracteres que dificultaron su lectura. De todas formas, esos campos no eran de utilidad para la pregunta que se quiere responder.
+
+```{r}
+basemipieza <- read.csv2("01-Data/MIPIEZA_BASE-FINAL-03.csv", encoding = "UTF-8", header = TRUE)
+```
+
+Observando la base editada manualmente y leída a través de la función "read.csv2", identificamos que tiene 3083 observaciones y 179 variables. Cabe aclarar que casi todas las variables deben ser interpretadas con un diccionario que fue provisto por la UNTREF. El significado de cada una de ellas será detallado una vez que la base se encuentre editada para el presente ejercicio. Sin embargo, a modo de adelanto, visualizaremos su estructura:
+
+```{r}
+library(rmarkdown)
+```
+
+```{r}
+paged_table(head(basemipieza, 10))
+```
+
+Como podemos observar, la mayor parte de las variables y de sus respuestas son numéricas y, sin la lectura del diccionario provisto por la UNTREF, su interpretación se dificulta. Para ello, deberemos hacer modificaciones a la base, conforme se desarrolla a continuación.
+
+En primer lugar, para poder visualizar el Excel que fue entregado como diccionario, instalaremos el paquete **readxl**.
+
+```{r}
+install.packages("readxl")
+```
+
+```{r}
+library(readxl)
+```
+
+```{r}
+ruta_archivo <- "01-Data/Diccionario Bases MI PIEZA (Entrevistada y Hogar).xlsx"
+diccionario <- read_excel(ruta_archivo, sheet = "Valores")
+```
+
+```{r}
+paged_table(diccionario)
+```
+
+De esta manera, podremos consultar en el documento el significado de cada variable y de los valores
+
+### Trabajo sobre la base
+
+Dado que la cantidad de variables que nos interesa es chica, haremos una primera selección de aquellas que nos interesan.
+
+```{r}
+library(dplyr)
+basemipieza_sel <- select(basemipieza, c("V3", "V43_OTR"), "V5":"V31", "Anos_barrio":"Meses_casa", "V47":"V57", "V71":"V77")
+```
+
+Para esta primera selección, tenemos 54 variables de interés, que están orientadas a obtener información acerca de:
+
+-   **Provincia** de las mujeres entrevistadas.
+-   **Condición de la entrevistada** (seleccionada o no para recibir el beneficio), de manera de poder dividirlas en grupo de tratamiento y grupo de control.
+-   **Estado de la vivienda** en base a preguntas sobre tipo de techo, paredes, piso, etc.
+-   **Tipo de obra** elegida entre las que ofrece el Programa "Mi Pieza"
+-   **Satisfacción para con atributos de la vivienda** tales como convivencia, estado de los cerramientos, etc.
+
+Antes de seguir, seguiremos modificando la base para agregarle una **variable que las agrupe por región**.
+
+### Regiones - detalles
+
+Se presentan las diferentes regiones de Argentina que se usarán como referencia para el presente ejercicio:
+
+-   **Nordeste**: Chaco, Formosa, Corrientes y Misiones.
+-   **Cuyo**: San Luis, San Juan, Mendoza y La Rioja
+-   **Noroeste**: Santiago del Estero, Salta, Jujuy, Tucumán y Catamarca
+-   **Región pampeana**: Ciudad Autónoma de Buenos Aires, La Pampa, Buenos Aires, Córdoba, Entre Ríos y Santa Fe
+-   **Patagonia**: Neuquén, Santa Cruz, Chubut, Río Negro y Tierra del Fuego.
+
+A continuación, introduciremos las modificaciones necesarias sobre la variable "V3", que es "provincia".
+
+```{r}
+basemipieza_sel$V3 <- as.integer(basemipieza_sel$V3)
+```
+
+```{r}
+basemipieza_sel <- mutate(basemipieza_sel, provincia=case_when(
+    V3 == 1 ~ "Buenos Aires", 
+    V3 == 2 ~ "Ciudad Autónoma de Buenos Aires",
+    V3 == 3 ~ "Catamarca",
+    V3 == 4 ~ "Chaco",
+    V3 == 5 ~ "Chubut",
+    V3 == 6 ~ "Córdoba",
+    V3 == 7 ~ "Corrientes",
+    V3 == 8 ~ "Entre Ríos",
+    V3 == 9 ~ "Formosa",
+    V3 == 10 ~ "Jujuy",
+    V3 == 11 ~ "La Pampa",
+    V3 == 12 ~ "La Rioja",
+    V3 == 13 ~ "Mendoza",
+    V3 == 14 ~ "Misiones",
+    V3 == 15 ~ "Neuquén",
+    V3 == 16 ~ "Río Negro",
+    V3 == 17 ~ "Salta",
+    V3 == 18 ~ "San Juan",
+    V3 == 19 ~ "San Luis",
+    V3 == 20 ~ "Santa Cruz",
+    V3 == 21 ~ "Santa Fe",
+    V3 == 22 ~ "Santiago del Estero",
+    V3 == 23 ~ "Tierra del Fuego",
+    V3 == 24 ~ "Tucumán"))
+```
+
+```{r}
+basemipieza_sel <- mutate(basemipieza_sel, provincia=as.integer(provincia))
+```
+
+Veamos ahora un resumen de la cantidad de observacions por provincia con las funciones **summarise** y **group_by**.
+
+```{r}
+basemipieza_prov <- basemipieza_sel %>%
+  group_by(provincia) %>%
+  summarise(cantidad_prov=n())
+```
+
+Ahora veremos la cantidad de valores por provincia de una manera resumida:
+
+```{r}
+paged_table(basemipieza_prov)
+```
+
+Como podemos observar, la mayor parte de los registros están en la provincia de Buenos Aires, lo que tiene sentido si se contempla que la mayor parte de barrios populares se encuentran en dicha provincia, conforme los datos brindados por el Observatorio de Barrios Populares (disponible en: <https://lookerstudio.google.com/u/0/reporting/0a127285-4dd0-43b2-b7b2-98390bfd567f/page/klATC>).
+
+Viendo que esto funciona, ahora agregaremos una variable que sea "región" sobre la base "basemipieza_sel".
+
+```{r}
+basemipieza_sel <- mutate(basemipieza_sel, región=case_when(
+    provincia == "Buenos Aires" ~ "Pampeana",
+    provincia == "Ciudad Autónoma de Buenos Aires" ~ "Pampeana",
+    provincia == "Catamarca" ~ "Noroeste",
+    provincia == "Chaco" ~ "Nordeste",
+    provincia == "Chubut" ~ "Patagonia",
+    provincia == "Córdoba" ~ "Pampeana",
+    provincia == "Corrientes" ~ "Nordeste",
+    provincia == "Entre Ríos" ~ "Pampeana",
+    provincia == "Formosa" ~ "Nordeste",
+    provincia == "Jujuy" ~ "Noroeste",
+    provincia == "La Pampa" ~ "Pampeana",
+    provincia == "La Rioja" ~ "Cuyo",
+    provincia == "Mendoza" ~ "Cuyo",
+    provincia == "Misiones" ~ "Nordeste",
+    provincia == "Neuquén" ~ "Pampeana",
+    provincia == "Río Negro" ~ "Patagonia",
+    provincia == "Salta" ~ "Noroeste",
+    provincia == "San Juan" ~ "Cuyo",
+    provincia == "San Luis" ~ "Cuyo",
+    provincia == "Santa Cruz" ~ "Patagonia",
+    provincia == "Santa Fe" ~ "Pampeana",
+    provincia == "Santiago del Estero" ~ "Noroeste",
+    provincia == "Tierra del Fuego" ~ "Nordeste",
+    provincia == "Tucumán" ~ "Noroeste"))
+```
+
+También modificaremos la variable "V5" para que adquiera el valor "Sí" o "No" según si fueron o no seleccionadas (1=Sí, 2=No).
+
+```{r}
+basemipieza_sel <- mutate(basemipieza_sel, V5=case_when(
+    V5 == 1 ~ "Sí",
+    V5 == 2 ~ "No"))
+```
+
+Agregada la columna y modificada la variable "V5", veremos cuántos valores tenemos por región y la participación que cada una tiene sobre el total. Además, la cantidad de mujeres seleccionadas (grupo de tratamiento) y no seleccionadas (grupo de control) en cada una:
+
+```{r}
+basemipieza_prov <- basemipieza_sel %>%
+  group_by(región) %>%
+  summarise(cantidad_enc=n(),porcentaje_reg=round((n()/nrow(basemipieza_sel)*100), 2),cantidad_trat=sum(V5=="Sí"), cantidad_control=sum(V5=="No"))
+```
+
+Ahora veremos la cantidad de valores por provincia de una manera resumida:
+
+```{r}
+paged_table(basemipieza_prov)
+```
+
+## Primeras conclusiones
+
+Debido a que la pregunta que se busca responder está relacionada con la región en la que residen las personas relevadas, una pregunta importante será entender si hay suficiente N en cada región tanto de mujeres beneficiarias como no beneficiaras y si están relativamente balanceadas.
+
+Las regiones "Cuyo" y "Patagonia" tienen la doble característica de tener pocas mujeres encuestadas y, a su vez, estar relativamente desbalanceadas.
+
+Con los datos obtenidos, podremos luego realizar los ejercicios correspondientes para ver si tienen potencia estadística y si con los mismos es posible responder la pregunta de investigación.
