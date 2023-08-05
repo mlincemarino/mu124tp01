@@ -3,8 +3,8 @@ title: "Trabajo Práctico 01"
 author: "Matías Lince Marino"
 date: "2023-08-05"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -44,10 +44,6 @@ paged_table(head(basemipieza, 10))
 Como podemos observar, la mayor parte de las variables y de sus respuestas son numéricas y, sin la lectura del diccionario provisto por la UNTREF, su interpretación se dificulta. Para ello, deberemos hacer modificaciones a la base, conforme se desarrolla a continuación.
 
 En primer lugar, para poder visualizar el Excel que fue entregado como diccionario, instalaremos el paquete **readxl**.
-
-```{r}
-install.packages("readxl")
-```
 
 ```{r}
 library(readxl)
@@ -125,10 +121,6 @@ basemipieza_sel <- mutate(basemipieza_sel, provincia=case_when(
     V3 == 22 ~ "Santiago del Estero",
     V3 == 23 ~ "Tierra del Fuego",
     V3 == 24 ~ "Tucumán"))
-```
-
-```{r}
-basemipieza_sel <- mutate(basemipieza_sel, provincia=as.integer(provincia))
 ```
 
 Veamos ahora un resumen de la cantidad de observacions por provincia con las funciones **summarise** y **group_by**.
