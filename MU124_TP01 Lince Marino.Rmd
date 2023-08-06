@@ -203,7 +203,7 @@ paged_table(basemipieza_prov)
 
 ## Primeras conclusiones sobre el trabajo realizado
 
-Debido a que la pregunta que se busca responder está relacionada con la región en la que residen las personas relevadas, una pregunta importante será entender si hay suficiente N en cada región tanto de mujeres beneficiarias como no beneficiaras y si están relativamente balanceadas.
+Debido a que la pregunta que se busca responder está relacionada con la región en la que residen las personas relevadas, una pregunta importante será entender si hay suficiente N en cada región tanto de mujeres beneficiarias como no beneficiaras y si están relativamente balanceadas. 
 
 **Las regiones "Cuyo" y "Patagonia" tienen la doble característica de tener pocas mujeres encuestadas y un desbalance entre el grupo de tratamiento y el grupo de control**. En el caso de Cuyo, hay solo 49 mujeres encuestadas, de las cuales el 38,78% responden al grupo de tratamiento. Para la Patagonia, la cantidad de mujeres encuestadas es de 44 y solo un 29,55% de las mismas forman parte del grupo de tratamiento. 
 
