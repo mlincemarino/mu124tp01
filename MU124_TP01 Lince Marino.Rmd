@@ -3,31 +3,59 @@ title: "Instrumentos de Análisis Urbano II - Trabajo Práctico 01"
 author: "Matías Lince Marino"
 date: "2023-08-05"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{=html}
+<style>
+.notion-link {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.notion-icon {
+  margin-left: 5px;
+}
+</style>
+<hide>
+```
+
 ## Introducción
 
 El presente trabajo pretende servir de ejercicio preparatorio de la tesis de la Maestría de Economía Urbana, cuyo objeto de análisis es "Mi Pieza", un programa de subsidios destinado al mejoramiento de vivienda por autoconstrucción en barrios populares de Argentina.
 
-La base de datos fue obtenida a partir de un relevamiento que estuvo a cargo del Centro de Investigaciones en Estadística Aplicada (CINEA) de la Universidad Nacional de Tres de Febrero (UNTREF) en el marco de un proyecto financiado por el Banco Interamericano de Desarrollo. Este relevamiento fue utilizado para realizar una evaluación de impacto recientmente publicada, cuyos autores son el responsable de este Trabajo Práctico y Claudia Vázquez. La misma se encuentra disponible en el siguiente enlace: https://publications.iadb.org/es/impacto-de-los-programas-de-mejoramiento-de-vivienda-por-autoconstruccion-evidencia-para-barrios
+La base de datos fue obtenida a partir de un relevamiento que estuvo a cargo del Centro de Investigaciones en Estadística Aplicada (CINEA) de la Universidad Nacional de Tres de Febrero (UNTREF) en el marco de un proyecto financiado por el Banco Interamericano de Desarrollo. Este relevamiento fue utilizado para realizar una evaluación de impacto recientmente publicada, cuyos autores son el responsable de este Trabajo Práctico y Claudia Vázquez. La misma se encuentra disponible en el siguiente [enlace](%22https://publications.iadb.org/publications/spanish/viewer/Impacto-de-los-programas-de-mejoramiento-de-vivienda-por-autoconstruccion-evidencia-para-barrios-populares-de-Argentina.pdf%22){target="_blank"}
+
+```{r, results='asis'}
+url <- "https://publications.iadb.org/publications/spanish/viewer/Impacto-de-los-programas-de-mejoramiento-de-vivienda-por-autoconstruccion-evidencia-para-barrios-populares-de-Argentina.pdf"
+texto_marcador <- "Ver en Sitio Original"
+html_code <- sprintf('<a href="%s" class="notion-link">%s <span class="notion-icon">🔗</span></a>', url, texto_marcador)
+HTML(html_code)
+```
 
 ## Pregunta a responder en el presente trabajo
 
-Sobre la base de los hallazgos que surgieron de la evaluación de impacto mencionada, y con el objetivo de realizar reformulaciones de la política, se pretende indagar acerca del efecto que tuvo la asignación de montos idénticos para todas las provincias del país, cuyos costos de construcción son muy disímiles. 
+Sobre la base de los hallazgos que surgieron de la evaluación de impacto mencionada, y con el objetivo de realizar reformulaciones de la política, se pretende indagar acerca del efecto que tuvo la asignación de montos idénticos para todas las provincias del país, cuyos costos de construcción son muy disímiles.
 
-Para poder avanzar en la investigación, en una primera instancia será necesario entender si hay suficiente información disponible para dar respuesta a la pregunta. En esta línea, la primera tarea será procesar la base de manera de **entender qué cantidad de mujeres seleccionadas (grupo de tratamiento) y no seleccionadas (grupo de control) hay en cada región**. 
+Para poder avanzar en la investigación, en una primera instancia será necesario entender si hay suficiente información disponible para dar respuesta a la pregunta. En esta línea, la primera tarea será procesar la base de manera de **entender qué cantidad de mujeres seleccionadas (grupo de tratamiento) y no seleccionadas (grupo de control) hay en cada región**.
 
 ## Edición de la base de datos para resolución de Trabajo Práctico 01
 
 La base de datos original contiene 3.083 observaciones y más de 190 variables. Debido a la pregunta de investigación, se buscará editar la base conforme la necesidad, de manera de trabajar con menor cantidad de información.
 
-A los fines de poder leer correctamente la base, se eliminaron manualmente las columnas con campos abiertos dado que se importaron con errores en los caracteres que dificultaron su lectura. Cabe aclarar que esos campos no eran de utilidad para la pregunta que se quiere responder en este este ejercicio y en el marco de la pregunta de investigación para la tesis, dado que responden a aspectos cualitativos del Programa. 
+A los fines de poder leer correctamente la base, se eliminaron manualmente las columnas con campos abiertos dado que se importaron con errores en los caracteres que dificultaron su lectura. Cabe aclarar que esos campos no eran de utilidad para la pregunta que se quiere responder en este este ejercicio y en el marco de la pregunta de investigación para la tesis, dado que responden a aspectos cualitativos del Programa.
 
 ### Presentación de la base
 
@@ -47,7 +75,7 @@ paged_table(head(basemipieza, 10))
 
 Como podemos observar, la mayor parte de las variables y de sus respuestas son numéricas y, sin la lectura del diccionario provisto por la UNTREF, su interpretación se dificulta. Para ello, deberemos hacer modificaciones a la base, conforme se desarrolla a continuación.
 
-En una primera instancia se intentó visualizar el Excel que fue entregado como diccionario en el entorno del archivo y para ello se usaron funciones del paquete **readxl**. Sin embargo, la lectura resultaba algo engorrosa, por lo que se trabajó manualmente sobre el Excel para generar un PDF de mejor lectura. 
+En una primera instancia se intentó visualizar el Excel que fue entregado como diccionario en el entorno del archivo y para ello se usaron funciones del paquete **readxl**. Sin embargo, la lectura resultaba algo engorrosa, por lo que se trabajó manualmente sobre el Excel para generar un PDF de mejor lectura.
 
 Se deja constancia del proceso a los fines de poder ver la mejora en la visualización.
 
@@ -64,9 +92,9 @@ diccionario <- read_excel(ruta_archivo, sheet = "Valores") #Leemos el archivo.
 paged_table(diccionario) #Visualizamos el archivo
 ```
 
-Dada la dificultad de lectura que presenta, y tal como se mencionó anteriormente, se generó el PDF y se lo cargó en el repositorio de GitHub El mismo se encuentra disponible en el siguiente enlace: https:github.com/mlincemarino/mu124tp01/blob/main/MIPIEZA_Diccionario%20Bases%20-%20Entrevistada%20y%20Hogar.pdf. 
+Dada la dificultad de lectura que presenta, y tal como se mencionó anteriormente, se generó el PDF y se lo cargó en el repositorio de GitHub El mismo se encuentra disponible en el siguiente enlace: <https:github.com/mlincemarino/mu124tp01/blob/main/MIPIEZA_Diccionario%20Bases%20-%20Entrevistada%20y%20Hogar.pdf>.
 
-De esta manera, podremos consultar en el documento el significado de cada variable y de los valores en cualquier momento que sea necesario. 
+De esta manera, podremos consultar en el documento el significado de cada variable y de los valores en cualquier momento que sea necesario.
 
 ### Trabajo sobre la base
 
@@ -97,7 +125,7 @@ Se presentan las diferentes regiones de Argentina que se usarán como referencia
 -   **Región pampeana**: Ciudad Autónoma de Buenos Aires, La Pampa, Buenos Aires, Córdoba, Entre Ríos y Santa Fe
 -   **Patagonia**: Neuquén, Santa Cruz, Chubut, Río Negro y Tierra del Fuego.
 
-A continuación, introduciremos las modificaciones necesarias sobre la variable "V3", que es "provincia" (ver diccionario). 
+A continuación, introduciremos las modificaciones necesarias sobre la variable "V3", que es "provincia" (ver diccionario).
 
 ```{r}
 basemipieza_sel$V3 <- as.integer(basemipieza_sel$V3)
@@ -193,7 +221,7 @@ basemipieza_prov <- basemipieza_sel %>%
   summarise(cantidad_enc=n(),porcentaje_reg=round((n()/nrow(basemipieza_sel)*100), 2),cantidad_trat=sum(V5=="Sí"), cantidad_control=sum(V5=="No"), porcentaje_trat=round(cantidad_trat/(cantidad_trat+cantidad_control)*100,2), porcentaje_control=round(cantidad_control/(cantidad_trat+cantidad_control)*100,2))
 ```
 
-porcentaje_reg=round((n()/nrow(basemipieza_sel)*100), 2)
+porcentaje_reg=round((n()/nrow(basemipieza_sel)\*100), 2)
 
 Ahora veremos la cantidad de valores por provincia de una manera resumida:
 
@@ -203,10 +231,10 @@ paged_table(basemipieza_prov)
 
 ## Primeras conclusiones sobre el trabajo realizado
 
-Debido a que la pregunta que se busca responder está relacionada con la región en la que residen las personas relevadas, una pregunta importante será entender si hay suficiente N en cada región tanto de mujeres beneficiarias como no beneficiaras y si están relativamente balanceadas. 
+Debido a que la pregunta que se busca responder está relacionada con la región en la que residen las personas relevadas, una pregunta importante será entender si hay suficiente N en cada región tanto de mujeres beneficiarias como no beneficiaras y si están relativamente balanceadas.
 
-**Las regiones "Cuyo" y "Patagonia" tienen la doble característica de tener pocas mujeres encuestadas y un desbalance entre el grupo de tratamiento y el grupo de control**. En el caso de Cuyo, hay solo 49 mujeres encuestadas, de las cuales el 38,78% responden al grupo de tratamiento. Para la Patagonia, la cantidad de mujeres encuestadas es de 44 y solo un 29,55% de las mismas forman parte del grupo de tratamiento. 
+**Las regiones "Cuyo" y "Patagonia" tienen la doble característica de tener pocas mujeres encuestadas y un desbalance entre el grupo de tratamiento y el grupo de control**. En el caso de Cuyo, hay solo 49 mujeres encuestadas, de las cuales el 38,78% responden al grupo de tratamiento. Para la Patagonia, la cantidad de mujeres encuestadas es de 44 y solo un 29,55% de las mismas forman parte del grupo de tratamiento.
 
 **En las restantes regiones hay un mayor balance**, teniendo diferencias menores a los 6 puntos porcentuales entre grupo de tratamiento y grupo de control.
 
-Con los datos obtenidos, podremos luego realizar los ejercicios correspondientes para ver si tienen potencia estadística y si con los mismos es posible responder la pregunta de investigación de tesis. 
+Con los datos obtenidos, podremos luego realizar los ejercicios correspondientes para ver si tienen potencia estadística y si con los mismos es posible responder la pregunta de investigación de tesis.
