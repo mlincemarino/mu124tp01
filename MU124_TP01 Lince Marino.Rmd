@@ -3,8 +3,8 @@ title: "Instrumentos de Análisis Urbano II - Trabajo Práctico 01"
 author: "Matías Lince Marino"
 date: "2023-08-05"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -36,14 +36,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 El presente trabajo pretende servir de ejercicio preparatorio de la tesis de la Maestría de Economía Urbana, cuyo objeto de análisis es "Mi Pieza", un programa de subsidios destinado al mejoramiento de vivienda por autoconstrucción en barrios populares de Argentina.
 
-La base de datos fue obtenida a partir de un relevamiento que estuvo a cargo del Centro de Investigaciones en Estadística Aplicada (CINEA) de la Universidad Nacional de Tres de Febrero (UNTREF) en el marco de un proyecto financiado por el Banco Interamericano de Desarrollo. Este relevamiento fue utilizado para realizar una evaluación de impacto recientmente publicada, cuyos autores son el responsable de este Trabajo Práctico y Claudia Vázquez. La misma se encuentra disponible en el siguiente [enlace](%22https://publications.iadb.org/publications/spanish/viewer/Impacto-de-los-programas-de-mejoramiento-de-vivienda-por-autoconstruccion-evidencia-para-barrios-populares-de-Argentina.pdf%22){target="_blank"}
+La base de datos fue obtenida a partir de un relevamiento que estuvo a cargo del Centro de Investigaciones en Estadística Aplicada (CINEA) de la Universidad Nacional de Tres de Febrero (UNTREF) en el marco de un proyecto financiado por el Banco Interamericano de Desarrollo. Este relevamiento fue utilizado para realizar una evaluación de impacto recientmente publicada, cuyos autores son el responsable de este Trabajo Práctico y Claudia Vázquez. La misma se encuentra disponible en la web.  
 
-```{r, results='asis'}
+```{r, echo = FALSE}
+library(htmltools)
+```
+
+```{r, echo = FALSE}
 url <- "https://publications.iadb.org/publications/spanish/viewer/Impacto-de-los-programas-de-mejoramiento-de-vivienda-por-autoconstruccion-evidencia-para-barrios-populares-de-Argentina.pdf"
-texto_marcador <- "Ver en Sitio Original"
+texto_marcador <- "Banco Interamericano de Desarrollo - Impacto de los programas de mejoramiento de vivienda por autoconstrucción: evidencia para barrios populares de Argentina"
 html_code <- sprintf('<a href="%s" class="notion-link">%s <span class="notion-icon">🔗</span></a>', url, texto_marcador)
 HTML(html_code)
 ```
+**Aclaración**: a los fines de mejorar la estética, se ocultó el chunk utilizado, que implicó activar la librería "htmltools" y usar la función strintif con la utilización de la clase "notion-link", en un intento no del todo logrado de imitar la estética de previsualización de URL que tiene dicha aplicación. Seguirá explorándose cómo hacerlo para lograr una mejor visualización del documento. 
 
 ## Pregunta a responder en el presente trabajo
 
@@ -60,17 +65,17 @@ A los fines de poder leer correctamente la base, se eliminaron manualmente las c
 ### Presentación de la base
 
 ```{r}
-basemipieza <- read.csv2("01-Data/MIPIEZA_BASE-FINAL-03.csv", encoding = "UTF-8", header = TRUE)
+basemipieza <- read.csv2("01-Data/MIPIEZA_BASE-FINAL-03.csv", encoding = "UTF-8", header = TRUE) #Acá leemos el csv. 
 ```
 
-Observando la base editada manualmente y leída a través de la función "read.csv2", identificamos que tiene 3083 observaciones y 179 variables. Cabe aclarar que todas las variables deben ser interpretadas con un diccionario que fue provisto por la UNTREF. El significado de cada una de ellas será detallado una vez que la base se encuentre editada para el presente ejercicio. Sin embargo, a modo de adelanto, visualizaremos su estructura:
+Observando la base editada manualmente y leída a través de la función "read.csv2", identificamos que tiene 3083 observaciones y 178 variables. Cabe aclarar que todas las variables deben ser interpretadas con un diccionario que fue provisto por la UNTREF. El significado de cada una de ellas será detallado una vez que la base se encuentre editada para el presente ejercicio. Sin embargo, a modo de adelanto, visualizaremos su estructura:
 
-```{r}
+```{r, echo = FALSE}
 library(rmarkdown)
 ```
 
 ```{r}
-paged_table(head(basemipieza, 10))
+paged_table(head(basemipieza, 10)) #Usamos la función "paged_table" para lograr una previsualización de la base. Previamente activamos la librería "rmarkdown" pero ocultamos el chunk dado que arrojaba otras líneas en el HTML que eran innecesarias.  
 ```
 
 Como podemos observar, la mayor parte de las variables y de sus respuestas son numéricas y, sin la lectura del diccionario provisto por la UNTREF, su interpretación se dificulta. Para ello, deberemos hacer modificaciones a la base, conforme se desarrolla a continuación.
@@ -80,19 +85,28 @@ En una primera instancia se intentó visualizar el Excel que fue entregado como 
 Se deja constancia del proceso a los fines de poder ver la mejora en la visualización.
 
 ```{r}
-library(readxl) #Instalamos paquete **readxl**
+library(readxl) #Instalamos paquete "readxl".
 ```
 
 ```{r}
-ruta_archivo <- "01-Data/Diccionario Bases MI PIEZA (Entrevistada y Hogar).xlsx" #Incluimos ruta del archivo
+ruta_archivo <- "01-Data/Diccionario Bases MI PIEZA (Entrevistada y Hogar).xlsx" #Incluimos ruta del archivo.
 diccionario <- read_excel(ruta_archivo, sheet = "Valores") #Leemos el archivo.
 ```
 
 ```{r}
-paged_table(diccionario) #Visualizamos el archivo
+paged_table(diccionario) #Visualizamos el archivo con la función "paged_table". 
 ```
 
-Dada la dificultad de lectura que presenta, y tal como se mencionó anteriormente, se generó el PDF y se lo cargó en el repositorio de GitHub El mismo se encuentra disponible en el siguiente enlace: <https:github.com/mlincemarino/mu124tp01/blob/main/MIPIEZA_Diccionario%20Bases%20-%20Entrevistada%20y%20Hogar.pdf>.
+Dada la dificultad de lectura que presenta, y tal como se mencionó anteriormente, se generó el PDF y se lo cargó en el repositorio de GitHub El mismo se encuentra disponible en el siguiente enlace:
+
+
+```{r, echo = FALSE}
+urldiccionario <- "https:github.com/mlincemarino/mu124tp01/blob/main/MIPIEZA_Diccionario%20Bases%20-%20Entrevistada%20y%20Hogar.pdf"
+texto_marcador02 <- "Diccionario de base de datos de Mi Pieza"
+html_code <- sprintf('<a href="%s" class="notion-link">%s <span class="notion-icon">🔗</span></a>', urldiccionario, texto_marcador02)
+HTML(html_code)
+```
+
 
 De esta manera, podremos consultar en el documento el significado de cada variable y de los valores en cualquier momento que sea necesario.
 
@@ -101,8 +115,11 @@ De esta manera, podremos consultar en el documento el significado de cada variab
 Dado que las variables que nos interesan y son de utilidad para responder la pregunta de investigación de la tesis es limitada, haremos una primera selección de aquellas que nos interesan.
 
 ```{r}
-library(dplyr)
-basemipieza_sel <- select(basemipieza, c("V3", "V43_OTR"), "V5":"V31", "Anos_barrio":"Meses_casa", "V47":"V57", "V71":"V77")
+library(dplyr) #Activamos la librería "dplyr"
+```
+
+```{r}
+basemipieza_sel <- select(basemipieza, c("V3", "V43_OTR"), "V5":"V31", "Anos_barrio":"Meses_casa", "V47":"V57", "V71":"V77") #Seleccionamos las variables de interés.
 ```
 
 Para esta primera selección, tenemos 54 variables de interés, que están orientadas a obtener información acerca de:
@@ -128,10 +145,11 @@ Se presentan las diferentes regiones de Argentina que se usarán como referencia
 A continuación, introduciremos las modificaciones necesarias sobre la variable "V3", que es "provincia" (ver diccionario).
 
 ```{r}
-basemipieza_sel$V3 <- as.integer(basemipieza_sel$V3)
+basemipieza_sel$V3 <- as.integer(basemipieza_sel$V3) #Convertimos a integer.
 ```
 
 ```{r}
+#Cambiamos los nombres de las columnas
 basemipieza_sel <- mutate(basemipieza_sel, provincia=case_when(
     V3 == 1 ~ "Buenos Aires", 
     V3 == 2 ~ "Ciudad Autónoma de Buenos Aires",
@@ -162,6 +180,7 @@ basemipieza_sel <- mutate(basemipieza_sel, provincia=case_when(
 Veamos ahora un resumen de la cantidad de observacions por provincia con las funciones **summarise** y **group_by**.
 
 ```{r}
+#Agrupamos por provincia y agregamos el dato de la cantidad de observaciones por cada una. 
 basemipieza_prov <- basemipieza_sel %>%
   group_by(provincia) %>%
   summarise(cantidad_prov=n())
@@ -170,7 +189,11 @@ basemipieza_prov <- basemipieza_sel %>%
 Ahora veremos la cantidad de valores por provincia de una manera resumida:
 
 ```{r}
-paged_table(basemipieza_prov)
+paged_table(basemipieza_prov) #Visualizamos la base con la función "paged_table". 
+```
+
+```{r}
+knitr::kable(basemipieza_prov, format = "pipe", table.attr = 'style="width:100%;"') #Otra forma de visualizar con la función "kable", que permite leer todo el listado de corrido.
 ```
 
 Como podemos observar, la mayor parte de los registros están en la provincia de Buenos Aires, lo que tiene sentido si se tiene en cuenta que la mayor parte de barrios populares se encuentran en dicha provincia, conforme los datos brindados por el Observatorio de Barrios Populares (disponible en: <https://lookerstudio.google.com/u/0/reporting/0a127285-4dd0-43b2-b7b2-98390bfd567f/page/klATC>).
@@ -178,6 +201,7 @@ Como podemos observar, la mayor parte de los registros están en la provincia de
 Viendo que esto funciona, ahora agregaremos una variable que sea "región" sobre la base "basemipieza_sel".
 
 ```{r}
+#Agregamos nueva variable (región) según valor de la variable "provincia". Importante: este proceso se debería poder automatizar. Resta explorar cómo hacerlo. 
 basemipieza_sel <- mutate(basemipieza_sel, región=case_when(
     provincia == "Buenos Aires" ~ "Pampeana",
     provincia == "Ciudad Autónoma de Buenos Aires" ~ "Pampeana",
@@ -208,6 +232,7 @@ basemipieza_sel <- mutate(basemipieza_sel, región=case_when(
 También modificaremos la variable "V5" (Seleccionada; ver diccionario) para que adquiera el valor "Sí" o "No" según si fueron o no seleccionadas (1=Sí, 2=No).
 
 ```{r}
+#Modificamos el valor de la variable V5 para facilitar su lectura. 
 basemipieza_sel <- mutate(basemipieza_sel, V5=case_when(
     V5 == 1 ~ "Sí",
     V5 == 2 ~ "No"))
@@ -216,17 +241,16 @@ basemipieza_sel <- mutate(basemipieza_sel, V5=case_when(
 Agregada la columna y modificada la variable "V5", veremos cuántos valores tenemos por región y la participación que cada una tiene sobre el total. Además, la cantidad de mujeres seleccionadas (grupo de tratamiento) y no seleccionadas (grupo de control) en cada una, además de sus porcentajes:
 
 ```{r}
+#Agrupamos por región y agregamos variables que permitan visualizar qué cantidad y porcentaje de mujeres en grupo de tratamiento y en grupo de control hay en cada región. 
 basemipieza_prov <- basemipieza_sel %>%
   group_by(región) %>%
   summarise(cantidad_enc=n(),porcentaje_reg=round((n()/nrow(basemipieza_sel)*100), 2),cantidad_trat=sum(V5=="Sí"), cantidad_control=sum(V5=="No"), porcentaje_trat=round(cantidad_trat/(cantidad_trat+cantidad_control)*100,2), porcentaje_control=round(cantidad_control/(cantidad_trat+cantidad_control)*100,2))
 ```
 
-porcentaje_reg=round((n()/nrow(basemipieza_sel)\*100), 2)
-
 Ahora veremos la cantidad de valores por provincia de una manera resumida:
 
 ```{r}
-paged_table(basemipieza_prov)
+knitr::kable(basemipieza_prov, format = "pipe", table.attr = 'style="width:100%;"') #Usamos otra forma de visualizar a partir de la función "kable", que en este caso resulta más conveniente porque permite ver todos los valores en una misma página, lo que facilita la comparación. 
 ```
 
 ## Primeras conclusiones sobre el trabajo realizado
