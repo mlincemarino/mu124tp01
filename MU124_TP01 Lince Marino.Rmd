@@ -1,5 +1,5 @@
 ---
-title: "Instrumentos de Análisis Urbano II - Trabajo Práctico 01"
+title: "Trabajo Práctico 01"
 author: "Matías Lince Marino"
 date: "2023-08-05"
 output:
