@@ -68,7 +68,9 @@ A los fines de poder leer correctamente la base, se eliminaron manualmente las c
 basemipieza <- read.csv2("01-Data/MIPIEZA_BASE-FINAL-03.csv", encoding = "UTF-8", header = TRUE) #Acá leemos el csv. 
 ```
 
-Observando la base editada manualmente y leída a través de la función "read.csv2", identificamos que tiene 3083 observaciones y 178 variables. Cabe aclarar que todas las variables deben ser interpretadas con un diccionario que fue provisto por la UNTREF. El significado de cada una de ellas será detallado una vez que la base se encuentre editada para el presente ejercicio. Sin embargo, a modo de adelanto, visualizaremos su estructura:
+Observando la base editada manualmente y leída a través de la función "read.csv2", identificamos que tiene 3083 observaciones y 178 variables. Cabe aclarar que todas las variables deben ser interpretadas con un diccionario que fue provisto por la UNTREF. El significado de cada una de ellas será detallado una vez que la base se encuentre editada para el presente ejercicio.  
+
+Sin embargo, a modo de adelanto, visualizaremos su estructura:
 
 ```{r, echo = FALSE}
 library(rmarkdown)
@@ -77,6 +79,7 @@ library(rmarkdown)
 ```{r}
 paged_table(head(basemipieza, 10)) #Usamos la función "paged_table" para lograr una previsualización de la base. Previamente activamos la librería "rmarkdown" pero ocultamos el chunk dado que arrojaba otras líneas en el HTML que eran innecesarias.  
 ```
+Cabe aclarar que se eliminó una columna con datos personales (número de celular) de las beneficiarias, quedando los restantes datos disponibles dado que no son de carácter personal al no estar vinculados a ningún otro atributo que permita identificar a las personas. 
 
 Como podemos observar, la mayor parte de las variables y de sus respuestas son numéricas y, sin la lectura del diccionario provisto por la UNTREF, su interpretación se dificulta. Para ello, deberemos hacer modificaciones a la base, conforme se desarrolla a continuación.
 
