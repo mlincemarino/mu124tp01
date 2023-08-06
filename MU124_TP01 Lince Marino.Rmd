@@ -1,5 +1,5 @@
 ---
-title: "Trabajo Práctico 01"
+title: "Instrumentos de Análisis Urbano II - Trabajo Práctico 01"
 author: "Matías Lince Marino"
 date: "2023-08-05"
 output:
@@ -13,21 +13,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introducción
 
-El presente trabajo pretende servir de ejercicio preparatorio de la tesis, cuyo objeto de estudio es "Mi Pieza", un programa de subsidios destinado al mejoramiento de vivienda por autoconstrucción en barrios populares de Argentina.
+El presente trabajo pretende servir de ejercicio preparatorio de la tesis de la Maestría de Economía Urbana, cuyo objeto de análisis es "Mi Pieza", un programa de subsidios destinado al mejoramiento de vivienda por autoconstrucción en barrios populares de Argentina.
 
-La base de datos fue obtenida a partir de un relevamiento que estuvo a cargo del Centro de Investigaciones en Estadística Aplicada (CINEA) de la Universidad Nacional de Tres de Febrero (UNTREF) en el marco de un proyecto financiado por el Banco Interamericano de Desarrollo.
+La base de datos fue obtenida a partir de un relevamiento que estuvo a cargo del Centro de Investigaciones en Estadística Aplicada (CINEA) de la Universidad Nacional de Tres de Febrero (UNTREF) en el marco de un proyecto financiado por el Banco Interamericano de Desarrollo. Este relevamiento fue utilizado para realizar una evaluación de impacto recientmente publicada, cuyos autores son el responsable de este Trabajo Práctico y Claudia Vázquez. La misma se encuentra disponible en el siguiente enlace: https://publications.iadb.org/es/impacto-de-los-programas-de-mejoramiento-de-vivienda-por-autoconstruccion-evidencia-para-barrios
 
-## Pregunta de investigación para tesis
+## Pregunta a responder en el presente trabajo
 
-Sobre la base de los hallazgos que surgieron de la evaluación de impacto realizada (ampliar info y poner link) y con el objetivo de realizar reformulaciones de la política, se pretende indagar acerca del efecto que tuvo la asignación de montos idénticos para todas las provincias del país, cuyos costos de construcción son muy disímiles. 
+Sobre la base de los hallazgos que surgieron de la evaluación de impacto mencionada, y con el objetivo de realizar reformulaciones de la política, se pretende indagar acerca del efecto que tuvo la asignación de montos idénticos para todas las provincias del país, cuyos costos de construcción son muy disímiles. 
 
 Para poder avanzar en la investigación, en una primera instancia será necesario entender si hay suficiente información disponible para dar respuesta a la pregunta. En esta línea, la primera tarea será procesar la base de manera de **entender qué cantidad de mujeres seleccionadas (grupo de tratamiento) y no seleccionadas (grupo de control) hay en cada región**. 
 
-### Trabajo sobre la base
+## Edición de la base de datos para resolución de Trabajo Práctico 01
 
 La base de datos original contiene 3.083 observaciones y más de 190 variables. Debido a la pregunta de investigación, se buscará editar la base conforme la necesidad, de manera de trabajar con menor cantidad de información.
 
 A los fines de poder leer correctamente la base, se eliminaron manualmente las columnas con campos abiertos dado que se importaron con errores en los caracteres que dificultaron su lectura. Cabe aclarar que esos campos no eran de utilidad para la pregunta que se quiere responder en este este ejercicio y en el marco de la pregunta de investigación para la tesis, dado que responden a aspectos cualitativos del Programa. 
+
+### Presentación de la base
 
 ```{r}
 basemipieza <- read.csv2("01-Data/MIPIEZA_BASE-FINAL-03.csv", encoding = "UTF-8", header = TRUE)
@@ -45,22 +47,26 @@ paged_table(head(basemipieza, 10))
 
 Como podemos observar, la mayor parte de las variables y de sus respuestas son numéricas y, sin la lectura del diccionario provisto por la UNTREF, su interpretación se dificulta. Para ello, deberemos hacer modificaciones a la base, conforme se desarrolla a continuación.
 
-En primer lugar, para poder visualizar el Excel que fue entregado como diccionario, instalaremos el paquete **readxl**.
+En una primera instancia se intentó visualizar el Excel que fue entregado como diccionario en el entorno del archivo y para ello se usaron funciones del paquete **readxl**. Sin embargo, la lectura resultaba algo engorrosa, por lo que se trabajó manualmente sobre el Excel para generar un PDF de mejor lectura. 
+
+Se deja constancia del proceso a los fines de poder ver la mejora en la visualización.
 
 ```{r}
-library(readxl)
+library(readxl) #Instalamos paquete **readxl**
 ```
 
 ```{r}
-ruta_archivo <- "01-Data/Diccionario Bases MI PIEZA (Entrevistada y Hogar).xlsx"
-diccionario <- read_excel(ruta_archivo, sheet = "Valores")
+ruta_archivo <- "01-Data/Diccionario Bases MI PIEZA (Entrevistada y Hogar).xlsx" #Incluimos ruta del archivo
+diccionario <- read_excel(ruta_archivo, sheet = "Valores") #Leemos el archivo.
 ```
 
 ```{r}
-paged_table(diccionario)
+paged_table(diccionario) #Visualizamos el archivo
 ```
 
-De esta manera, podremos consultar en el documento el significado de cada variable y de los valores
+Dada la dificultad de lectura que presenta, y tal como se mencionó anteriormente, se generó el PDF y se lo cargó en el repositorio de GitHub El mismo se encuentra disponible en el siguiente enlace: https:github.com/mlincemarino/mu124tp01/blob/main/MIPIEZA_Diccionario%20Bases%20-%20Entrevistada%20y%20Hogar.pdf. 
+
+De esta manera, podremos consultar en el documento el significado de cada variable y de los valores en cualquier momento que sea necesario. 
 
 ### Trabajo sobre la base
 
@@ -195,7 +201,7 @@ Ahora veremos la cantidad de valores por provincia de una manera resumida:
 paged_table(basemipieza_prov)
 ```
 
-## Primeras conclusiones
+## Primeras conclusiones sobre el trabajo realizado
 
 Debido a que la pregunta que se busca responder está relacionada con la región en la que residen las personas relevadas, una pregunta importante será entender si hay suficiente N en cada región tanto de mujeres beneficiarias como no beneficiaras y si están relativamente balanceadas.
 
